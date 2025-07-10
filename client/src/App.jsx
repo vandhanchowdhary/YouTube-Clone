@@ -30,7 +30,7 @@ function App() {
             showSidebar ? "ml-64" : "ml-0"
           }`}
         >
-          <div className="p-4 overflow-y-auto h-[calc(100vh-4rem)]">
+          <div className="px-4 overflow-y-auto h-[calc(100vh-4rem)]">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
