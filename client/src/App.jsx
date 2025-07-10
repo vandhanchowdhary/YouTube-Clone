@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import VideoPlayer from "./pages/VideoPlayer";
 import Channel from "./pages/Channel";
 import { useState } from "react";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -35,7 +36,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/video/:id" element={<VideoPlayer />} />
-              <Route path="/channel/:id" element={<Channel />} />
+              <Route path="/channel/:id" element={<ProtectedRoute><Channel /></ProtectedRoute>} />
             </Routes>
           </div>
         </main>
