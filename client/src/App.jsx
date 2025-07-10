@@ -26,7 +26,7 @@ function App() {
 
         {/* Main Content (with left margin if sidebar visible) */}
         <main
-          className={`flex-1 transition-all duration-300 ${
+          className={`flex-1 transition-all duration-200 ${
             showSidebar ? "ml-64" : "ml-0"
           }`}
         >
