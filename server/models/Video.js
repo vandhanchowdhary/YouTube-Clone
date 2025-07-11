@@ -9,6 +9,11 @@ const videoSchema = new mongoose.Schema({
   channel: String, // channel ID
   views: Number,
   uploadDate: Date,
+  category: {
+    type: String,
+    enum: ["React", "Node", "MongoDB", "CSS", "JavaScript", "Others"], // customizable
+    default: "Others",
+  },
 });
 
 const Video = mongoose.model("Video", videoSchema);

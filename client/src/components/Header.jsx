@@ -2,10 +2,17 @@ import { useAuth } from "../context/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-function Header({ toggleSidebar }) {
+function Header({ toggleSidebar, onSearchChange }) {
   const { user, logout } = useAuth();
   const [channelId, setChannelId] = useState(null);
   const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    onSearchChange(value); // lifts search input to parent and sends up to app
+  };
 
   useEffect(() => {
     const fetchMyChannel = async () => {
@@ -38,8 +45,9 @@ function Header({ toggleSidebar }) {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-20 bg-gray-800 text-white flex items-center justify-between h-16 px-4 shadow">
+      {/* Left Side */}
       <div className="flex items-center gap-4">
-        <button onClick={toggleSidebar} className="text-xl">
+        <button onClick={toggleSidebar} className="text-xl px-2.5 py-1 rounded-full cursor-pointer hover:bg-gray-700 transition-all duration-200">
           ☰
         </button>
         <Link to="/" className="text-lg font-bold">
@@ -47,6 +55,22 @@ function Header({ toggleSidebar }) {
         </Link>
       </div>
 
+      {/* Search Bar */}
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="flex flex-1 justify-center"
+      >
+        <input
+          type="text"
+          placeholder="Search anything..."
+          value={query}
+          onChange={handleChange}
+          className="px-3 py-1 rounded-l border"
+        />
+        <button className="bg-gray-200 px-4 rounded-r">🔍</button>
+      </form>
+
+      {/* Right Side */}
       <div className="flex items-center gap-4">
         {user && (
           <>

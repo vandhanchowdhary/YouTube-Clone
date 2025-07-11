@@ -10,11 +10,15 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(true);
+  const [searchText, setSearchText] = useState("");
 
   return (
     <div className="relative h-screen overflow-hidden">
       {/* Header (fixed height) */}
-      <Header toggleSidebar={() => setShowSidebar(!showSidebar)} />
+      <Header
+        toggleSidebar={() => setShowSidebar(!showSidebar)}
+        onSearchChange={setSearchText}
+      />
 
       {/* Content below header */}
       <div className="flex pt-16 h-full">
@@ -33,10 +37,17 @@ function App() {
         >
           <div className="px-4 overflow-y-auto h-[calc(100vh-4rem)]">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Home searchText={searchText} />} />
               <Route path="/login" element={<Login />} />
               <Route path="/video/:id" element={<VideoPlayer />} />
-              <Route path="/channel/:id" element={<ProtectedRoute><Channel /></ProtectedRoute>} />
+              <Route
+                path="/channel/:id"
+                element={
+                  <ProtectedRoute>
+                    <Channel />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </div>
         </main>

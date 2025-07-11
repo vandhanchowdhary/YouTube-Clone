@@ -1,14 +1,28 @@
-const filters = ["All", "React", "Node.js", "MongoDB", "Frontend", "Backend"];
+const categories = [
+  "All",
+  "React",
+  "Node",
+  "MongoDB",
+  "JavaScript",
+  "CSS",
+  "Tailwind",
+];
 
-function FilterBar() {
+function FilterBar({ activeCategory, onChange }) {
   return (
-    <div className="flex space-x-3 overflow-x-auto py-3 px-4 bg-white border-b sticky z-10">
-      {filters.map((filter, idx) => (
+    <div className="flex gap-3 scrollbar-hide overflow-x-auto py-3 px-4 bg-white border-b sticky z-10">
+      {categories.map((cat) => (
         <button
-          key={idx}
-          className="bg-gray-200 hover:bg-gray-300 text-sm px-3 py-1 rounded-full whitespace-nowrap"
+          key={cat}
+          onClick={() => onChange(cat)}
+          className={`px-3 py-1 rounded-full text-sm whitespace-nowrap cursor-pointer transition-all duration-200
+            ${
+              activeCategory === cat
+                ? "bg-black text-white hover:text-red-500"
+                : "bg-gray-200 text-gray-700 hover:text-black"
+            }`}
         >
-          {filter}
+          {cat}
         </button>
       ))}
     </div>

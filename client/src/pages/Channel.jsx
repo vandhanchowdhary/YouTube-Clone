@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/useAuth";
 import { useParams } from "react-router-dom";
 import VideoCard from "../components/VideoCard";
+import EditVideoForm from "../components/EditVideoForm";
 
 function Channel() {
   const { user } = useAuth();
@@ -9,8 +10,7 @@ function Channel() {
   const [channel, setChannel] = useState(null);
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const isOwner = user && channel && user.username === channel.channelName;
+  const [editingVideo, setEditingVideo] = useState(null);
 
   useEffect(() => {
     const fetchChannel = async () => {
@@ -47,6 +47,61 @@ function Channel() {
 
   if (loading) return <div className="p-4">Loading...</div>;
 
+  const handleDelete = async (videoId) => {
+    const confirm = window.confirm(
+      "Are you sure you want to delete this video?"
+    );
+    if (!confirm) return;
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/videos/${videoId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+
+      if (res.ok) {
+        setVideos(videos.filter((v) => v._id !== videoId));
+      } else {
+        alert("Failed to delete video");
+      }
+    } catch (err) {
+      alert("Error: " + err.message);
+    }
+  };
+
+  const handleEditSave = async (videoId, updatedData) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/videos/${videoId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (res.ok) {
+        const updatedVideo = await res.json();
+        setVideos((prev) =>
+          prev.map((v) => (v._id === videoId ? updatedVideo : v))
+        );
+        setEditingVideo(null); // close form
+      } else {
+        alert("Update failed");
+      }
+    } catch (err) {
+      alert("Error: " + err.message);
+    }
+  };
+
+  if (loading) return <div className="p-4">Loading...</div>;
+  if (!channel)
+    return <div className="p-4 text-red-600">Channel not found</div>;
+
+  const isOwner = user && channel && user.id === channel.owner;
+
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold">{channel.channelName}</h2>
@@ -62,11 +117,17 @@ function Channel() {
             <div key={video._id} className="relative group">
               <VideoCard video={video} />
               {isOwner && (
-                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition">
-                  <button className="bg-yellow-400 text-xs px-2 py-1 rounded">
+                <div className="absolute bottom-2 right-2 flex gap-1">
+                  <button
+                    onClick={() => setEditingVideo(video)}
+                    className="bg-yellow-400 text-xs px-2 py-1 rounded"
+                  >
                     Edit
                   </button>
-                  <button className="bg-red-500 text-xs px-2 py-1 rounded">
+                  <button
+                    onClick={() => handleDelete(video._id)}
+                    className="bg-red-500 text-xs px-2 py-1 rounded"
+                  >
                     Delete
                   </button>
                 </div>
@@ -77,6 +138,13 @@ function Channel() {
           <p className="text-sm text-gray-500">No videos uploaded yet.</p>
         )}
       </div>
+      {editingVideo && (
+        <EditVideoForm
+          video={editingVideo}
+          onSave={handleEditSave}
+          onCancel={() => setEditingVideo(null)}
+        />
+      )}
     </div>
   );
 }

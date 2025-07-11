@@ -21,7 +21,7 @@ function Login() {
       const data = await res.json();
 
       if (res.ok && data.token) {
-        login({ username: data.username, token: data.token });
+        login({ username: data.username, token: data.token, id: data.id }); // includes id
         navigate("/");
       } else {
         alert(data.message || "Authentication failed");
