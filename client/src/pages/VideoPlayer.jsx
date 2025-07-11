@@ -90,8 +90,8 @@ function VideoPlayer() {
     <div className="flex flex-col md:flex-row gap-6 p-4">
       {/* LEFT: Video + Comments */}
       <div className="w-full md:w-[70%]">
-        <div className="aspect-video w-full bg-black rounded mb-4">
-          <video controls className="w-full h-full object-cover">
+        <div className="aspect-video w-full bg-black rounded-xl mb-4">
+          <video controls className="w-full h-full object-cover rounded-xl">
             <source
               src={`http://localhost:5000${video.videoUrl}`}
               alt={video.thumbnailUrl}
