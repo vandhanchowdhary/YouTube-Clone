@@ -141,7 +141,7 @@ function VideoPlayer() {
         <FilterBar activeCategory={category} onChange={setCategory} />
         <div className="space-y-3">
           {recommended.map((v) => (
-            <VideoCard key={v._id} video={v} />
+            <VideoCard key={v._id} video={v} compact />
           ))}
         </div>
       </div>
