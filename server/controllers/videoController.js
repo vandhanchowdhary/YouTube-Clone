@@ -1,8 +1,11 @@
 import Video from "../models/Video.js";
 
+// This allows frontend to call:  GET /api/videos?channel=channelId
 export const getAllVideos = async (req, res) => {
   try {
-    const videos = await Video.find().sort({ uploadDate: -1 });
+    const filter = req.query.channel ? { channel: req.query.channel } : {};
+
+    const videos = await Video.find(filter).sort({ uploadDate: -1 });
     res.json(videos);
   } catch (err) {
     res.status(500).json({ message: err.message });
