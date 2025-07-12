@@ -93,9 +93,11 @@ function VideoPlayer() {
         <div className="aspect-video w-full bg-black rounded-xl mb-4">
           <video controls className="w-full h-full object-cover rounded-xl">
             <source
-              src={`http://localhost:5000${video.videoUrl}`}
-              alt={video.thumbnailUrl}
-              type="video/mp4"
+              src={
+                video.videoUrl.startsWith("http")
+                  ? video.videoUrl
+                  : `http://localhost:5000${video.videoUrl}`
+              }
             />
           </video>
         </div>
