@@ -6,6 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import videoRoutes from "./routes/videoRoutes.js";
 import channelRoutes from "./routes/channelRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
+import path from "path";
 
 dotenv.config();
 connectDB();
@@ -18,6 +19,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/videos", videoRoutes);
 app.use("/api/channels", channelRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/uploads", express.static("uploads")); // Publicly accessible
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
