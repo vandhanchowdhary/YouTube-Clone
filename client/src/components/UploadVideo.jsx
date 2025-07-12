@@ -38,7 +38,7 @@ function UploadVideo() {
     form.append("description", formData.description);
     form.append("category", formData.category);
     form.append("video", formData.file);
-    form.append("channelId", user.channelId); // Assuming user has this
+    form.append("channelId", user.channelId); // Assuming user has this, then it auto attaches to the video and hidden from the user
 
     try {
       const res = await fetch("http://localhost:5000/api/videos/upload", {
