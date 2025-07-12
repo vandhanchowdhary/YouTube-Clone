@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/useAuth";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import VideoCard from "../components/VideoCard";
 import EditVideoForm from "../components/EditVideoForm";
 
@@ -109,6 +109,17 @@ function Channel() {
       <p className="text-sm text-gray-400 mb-6">
         Subscribers: {channel.subscribers}
       </p>
+
+      {isOwner && (
+        <div className="mb-4">
+          <Link
+            to="/upload"
+            className="inline-block bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700"
+          >
+            ⬆ Upload Video
+          </Link>
+        </div>
+      )}
 
       <h3 className="text-xl font-semibold mb-4">Uploaded Videos</h3>
       <div className="flex flex-wrap gap-4">

@@ -7,6 +7,7 @@ import VideoPlayer from "./pages/VideoPlayer";
 import Channel from "./pages/Channel";
 import { useState } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
+import UploadVideo from "./components/UploadVideo";
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(true);
