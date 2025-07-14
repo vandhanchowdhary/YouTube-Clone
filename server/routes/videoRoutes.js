@@ -16,12 +16,14 @@ const router = express.Router();
 router.get("/", getAllVideos);
 router.get("/:id", getVideoById);
 router.delete("/:id", verifyToken, deleteVideo); // Protected
-router.put('/:id', verifyToken, updateVideo); // Protected
-router.post("/upload", verifyToken, upload.single("video"), async (req, res) => {
+router.put("/:id", verifyToken, updateVideo); // Protected
+router.post(
+  "/upload",
+  verifyToken,
+  upload.single("video"),
+  async (req, res) => {
     try {
-
-      const { title, description, category, channelId, uploader } =
-        req.body;
+      const { title, description, category, channelId, uploader } = req.body;
 
       // Upload video to Cloudinary
       const result = await cloudinary.uploader.upload(req.file.path, {
@@ -59,45 +61,59 @@ router.post("/upload", verifyToken, upload.single("video"), async (req, res) => 
   }
 );
 router.post("/:id/like", verifyToken, async (req, res) => {
-  const userId = req.user.id;
-  const video = await Video.findById(req.params.id);
+  try {
+    const userId = req.user.id;
+    const video = await Video.findById(req.params.id);
 
-  if (!video) return res.status(404).json({ message: "Video not found" });
+    if (!video) return res.status(404).json({ message: "Video not found" });
 
-  // Remove from dislikes if exists
-  video.dislikes = video.dislikes.filter((id) => id.toString() !== userId);
+    // Remove from dislikes
+    video.dislikes = video.dislikes.filter((id) => !id.equals(userId));
 
-  // Toggle like
-  if (video.likes.includes(userId)) {
-    video.likes = video.likes.filter((id) => id.toString() !== userId);
-  } else {
-    video.likes.push(userId);
+    // Toggle like
+    const alreadyLiked = video.likes.some((id) => id.equals(userId));
+    if (alreadyLiked) {
+      video.likes = video.likes.filter((id) => !id.equals(userId));
+    } else {
+      video.likes.push(userId);
+    }
+
+    await video.save();
+
+    res.json({
+      likes: video.likes.length,
+      dislikes: video.dislikes.length,
+    });
+  } catch (err) {
+    console.error("🔥 Like route error:", err.message);
+    res.status(500).json({ message: "Server error" });
   }
-
-  await video.save();
-  res.json({ likes: video.likes.length, dislikes: video.dislikes.length });
 });
 
 router.post("/:id/dislike", verifyToken, async (req, res) => {
-  const userId = req.user.id;
-  const video = await Video.findById(req.params.id);
+  try {
+    const userId = req.user.id;
+    const video = await Video.findById(req.params.id);
 
-  if (!video) return res.status(404).json({ message: "Video not found" });
+    if (!video) return res.status(404).json({ message: "Video not found" });
 
-  // Remove from likes if exists
-  video.likes = video.likes.filter((id) => id.toString() !== userId);
+    // Remove from likes if exists
+    video.likes = video.likes.filter((id) => !id.equals(userId));
 
-  // Toggle dislike
-  if (video.dislikes.includes(userId)) {
-    video.dislikes = video.dislikes.filter((id) => id.toString() !== userId);
-  } else {
-    video.dislikes.push(userId);
+    // Toggle dislike
+    const alreadyDisliked = video.dislikes.some((id) => id.equals(userId));
+    if (alreadyDisliked) {
+      video.dislikes = video.dislikes.filter((id) => !id.equals(userId));
+    } else {
+      video.dislikes.push(userId);
+    }
+
+    await video.save();
+    res.json({ likes: video.likes.length, dislikes: video.dislikes.length });
+  } catch (err) {
+    console.error("🔥 Dislike route error:", err.message);
+    res.status(500).json({ message: "Server error" });
   }
-
-  await video.save();
-  res.json({ likes: video.likes.length, dislikes: video.dislikes.length });
 });
-
-
 
 export default router;

@@ -13,7 +13,7 @@ const videoSchema = new mongoose.Schema({
   uploadDate: Date,
   category: {
     type: String,
-    enum: ["React", "Node", "MongoDB", "CSS", "JavaScript", "Others"], // customizable
+    enum: ["React", "Tailwind", "Node", "MongoDB", "CSS", "JavaScript", "Others"], // customizable
     default: "Others",
   },
 });
