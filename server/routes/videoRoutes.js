@@ -7,6 +7,7 @@ import {
   updateVideo,
 } from "../controllers/videoController.js";
 import verifyToken from "../middleware/authMiddleware.js";
+import Video from "../models/Video.js";
 
 const router = express.Router();
 
@@ -20,15 +21,17 @@ router.post(
   upload.single("video"),
   async (req, res) => {
     try {
-      const { title, description, category, channelId } = req.body;
+      const { title, description, category, channelId, thumbnailUrl } = req.body;
 
       const video = await Video.create({
         title,
         description,
         category,
         videoUrl: `/uploads/${req.file.filename}`, // public path
+        thumbnailUrl: thumbnailUrl || "", // fallback if not provided
         uploader: req.user.username,
         channel: channelId,
+        uploadDate: new Date(),
       });
 
       res.status(201).json(video);

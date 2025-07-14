@@ -9,6 +9,7 @@ function UploadVideo() {
     title: "",
     description: "",
     category: "React",
+    thumbnailUrl: "",
     file: null,
   });
 
@@ -37,7 +38,14 @@ function UploadVideo() {
     form.append("title", formData.title);
     form.append("description", formData.description);
     form.append("category", formData.category);
+    form.append("thumbnailUrl", formData.thumbnailUrl);
+    form.append("uploader", user.username);
     form.append("video", formData.file);
+
+    if (!user.channelId) {
+      setStatus("❌ Cannot upload: No channel linked to this user.");
+      return;
+    }
     form.append("channelId", user.channelId); // Assuming user has this, then it auto attaches to the video and hidden from the user
 
     try {
@@ -56,6 +64,7 @@ function UploadVideo() {
           description: "",
           category: "React",
           file: null,
+          thumbnailUrl: "",
         });
       } else {
         const err = await res.json();
@@ -103,6 +112,14 @@ function UploadVideo() {
             </option>
           ))}
         </select>
+
+        <input
+          type="text"
+          name="thumbnailUrl"
+          placeholder="Thumbnail Image URL"
+          value={formData.thumbnailUrl}
+          onChange={handleChange}
+        />
 
         <input
           type="file"
