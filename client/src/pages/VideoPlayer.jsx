@@ -24,7 +24,7 @@ function VideoPlayer() {
       })
       .catch((err) => console.error("Error loading video:", err));
 
-    let endpoint = `http://localhost:5000/api/videos?exclude=${id}&limit=6`;
+    let endpoint = `http://localhost:5000/api/videos?exclude=${id}&limit=15`;
     if (category !== "All") {
       endpoint += `&category=${category}`;
     }
@@ -84,6 +84,42 @@ function VideoPlayer() {
     setComments((prev) => prev.filter((c) => c._id !== commentId));
   };
 
+  const handleLike = async () => {
+    const res = await fetch(
+      `http://localhost:5000/api/videos/${video._id}/like`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+    const data = await res.json();
+    setVideo((prev) => ({
+      ...prev,
+      likes: Array(data.likes).fill("x"),
+      dislikes: Array(data.dislikes).fill("x"),
+    }));
+  };
+
+  const handleDislike = async () => {
+    const res = await fetch(
+      `http://localhost:5000/api/videos/${video._id}/dislike`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+    const data = await res.json();
+    setVideo((prev) => ({
+      ...prev,
+      likes: Array(data.likes).fill("x"),
+      dislikes: Array(data.dislikes).fill("x"),
+    }));
+  };
+
   if (!video) return <div className="p-4">Loading...</div>;
 
   return (
@@ -91,18 +127,40 @@ function VideoPlayer() {
       {/* LEFT: Video + Comments */}
       <div className="w-full md:w-[70%]">
         <div className="aspect-video w-full bg-black rounded-xl mb-4">
-          <video controls className="w-full h-full object-cover rounded-xl">
-            <source
-              src={
-                video.videoUrl.startsWith("http")
-                  ? video.videoUrl
-                  : `http://localhost:5000${video.videoUrl}`
-              }
-            />
-          </video>
+          <video
+            key={video.videoUrl} // force re-render when videoUrl changes
+            controls
+            className="w-full h-full object-cover rounded-xl"
+            src={
+              video.videoUrl.startsWith("http")
+                ? video.videoUrl
+                : `http://localhost:5000${video.videoUrl}`
+            }
+          />
         </div>
 
         <h3 className="text-lg font-semibold">{video.title}</h3>
+        <div className="flex items-center gap-4 mt-2">
+          <button
+            className={`text-sm ${
+              video.likes.includes(user.id) ? "text-blue-500" : "text-gray-500"
+            }`}
+            onClick={handleLike}
+          >
+            👍 {video.likes.length}
+          </button>
+          <button
+            className={`text-sm ${
+              video.dislikes.includes(user.id)
+                ? "text-red-500"
+                : "text-gray-500"
+            }`}
+            onClick={handleDislike}
+          >
+            👎 {video.dislikes.length}
+          </button>
+        </div>
+
         <p className="text-sm text-gray-500">
           {video.uploader} • {video.views} views
         </p>

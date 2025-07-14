@@ -8,6 +8,8 @@ const videoSchema = new mongoose.Schema({
   uploader: String, // user ID or name
   channel: String, // channel ID
   views: Number,
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  dislikes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   uploadDate: Date,
   category: {
     type: String,
