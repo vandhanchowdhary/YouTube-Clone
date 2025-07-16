@@ -5,19 +5,25 @@ import { useEffect, useState } from "react";
 function Header({ toggleSidebar, onSearchChange }) {
   const { user, logout } = useAuth();
   const [channelId, setChannelId] = useState(null);
-  const navigate = useNavigate();
   const [query, setQuery] = useState("");
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setQuery(value);
-    onSearchChange(value); // lifts search input to parent and sends up to app
+  //  Submit search when Enter or 🔍 is pressed
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSearchChange(query.trim());
+  };
+
+  //  Clear input and reset search
+  const handleClear = () => {
+    setQuery("");
+    onSearchChange("");
   };
 
   useEffect(() => {
     const fetchMyChannel = async () => {
       if (!user) {
-        setChannelId(null); // Reset if no user
+        setChannelId(null);
         return;
       }
 
@@ -32,16 +38,16 @@ function Header({ toggleSidebar, onSearchChange }) {
           const data = await res.json();
           setChannelId(data._id);
         } else {
-          setChannelId(null); // No channel found for user
+          setChannelId(null);
         }
       } catch (err) {
         console.error("Channel fetch error:", err.message);
-        setChannelId(null); // Reset on fetch failure
+        setChannelId(null);
       }
     };
 
     fetchMyChannel();
-  }, [user]); // re-run on login/logout
+  }, [user]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-20 bg-white text-black flex items-center justify-between h-16 px-4 border-b shadow-sm">
@@ -53,24 +59,41 @@ function Header({ toggleSidebar, onSearchChange }) {
         >
           ☰
         </button>
-        <Link to="/" className="text-lg font-semibold text-red-600">
+        <Link to="/" className="flex items-center text-lg font-semibold text-red-600">
+          <img src="/logo.webp" alt="YouTube Clone Logo" className="h-8" />
           YouTube <span className="text-black font-light">Clone</span>
         </Link>
       </div>
 
-      {/* Center - Search bar */}
+      {/*  Center - Search bar with clear icon */}
       <form
-        onSubmit={(e) => e.preventDefault()}
-        className="flex items-center w-full max-w-xl mx-8"
+        onSubmit={handleSubmit}
+        className="relative flex items-center w-full max-w-xl mx-8"
       >
         <input
           type="text"
           placeholder="Search"
           value={query}
-          onChange={handleChange}
+          onChange={(e) => setQuery(e.target.value)}
           className="w-full px-4 py-1.5 border border-gray-300 rounded-l-full focus:outline-none"
         />
-        <button className="bg-gray-100 px-4 py-1.5 rounded-r-full border-t border-b border-r border-gray-300">
+
+        {/* Clear (X) icon */}
+        {query && (
+          <button
+            type="button"
+            onClick={handleClear}
+            className="absolute right-10 px-2 py-1.5 text-lg text-gray-400 hover:text-black cursor-pointer"
+          >
+            ✖
+          </button>
+        )}
+
+        {/* Submit button */}
+        <button
+          type="submit"
+          className="bg-gray-100 px-2 py-1.5 rounded-r-full border-t border-b border-r border-gray-300 hover:bg-gray-200 cursor-pointer"
+        >
           🔍
         </button>
       </form>

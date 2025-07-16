@@ -15,6 +15,8 @@ function VideoPlayer() {
   const [editingComment, setEditingComment] = useState(null);
   const [recommended, setRecommended] = useState([]);
   const [category, setCategory] = useState("All");
+  const [showMore, setShowMore] = useState(false);
+
 
   //  Fetches
   useEffect(() => {
@@ -151,9 +153,10 @@ function VideoPlayer() {
   if (!video) return <div className="p-4">Loading...</div>;
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 p-4">
+    <div className="flex flex-col md:flex-row gap-3 p-4">
       {/* LEFT: Video + Comments */}
-      <div className="w-full md:w-[70%]">
+      <div className="w-full md:w-[60%]">
+        {/* Video Player */}
         <div className="aspect-video w-full bg-black rounded-xl mb-4">
           <video
             key={video.videoUrl}
@@ -167,42 +170,68 @@ function VideoPlayer() {
           />
         </div>
 
-        <h3 className="text-lg font-semibold">{video.title}</h3>
+        {/* Title */}
+        <h2 className="text-xl font-semibold mb-2">{video.title}</h2>
 
-        {/*  Safe user access */}
-        <div className="flex items-center gap-4 mt-2">
-          <button
-            className={`text-sm ${
-              user?.id && video.likes.includes(user.id)
-                ? "text-blue-500"
-                : "text-gray-500"
-            }`}
-            onClick={handleLike}
-          >
-            👍 {video.likes?.length || 0}
+        {/* Info + Buttons */}
+        <div className="flex text-sm text-gray-600 mb-2">
+          {/* Uploader and Views */}
+          <div className="flex flex-col mr-4 gap-1">
+            <span className="text-gray-800 font-medium">{video.uploader}</span>
+            <span>{video.views} views</span>
+          </div>
+
+          <button className="bg-red-600 text-white px-3 rounded-full ml-2 mr-auto cursor-pointer hover:bg-red-700 transition duration-200">
+            Subscribe
           </button>
 
+          {/* Actions */}
+          <div className="flex gap-3 flex-wrap mt-2 sm:mt-0">
+            <button
+              onClick={handleLike}
+              className={`hover:text-blue-600 cursor-pointer bg-red-100 px-3 rounded-full transition duration-200 ${
+                user?.id && video.likes.includes(user.id)
+                  ? "text-blue-600"
+                  : "text-gray-600"
+              }`}
+            >
+              👍 {video.likes?.length || 0}
+            </button>
+            <button
+              onClick={handleDislike}
+              className={`hover:text-red-600 cursor-pointer bg-red-100 px-3 rounded-full transition duration-200 ${
+                user?.id && video.dislikes.includes(user.id)
+                  ? "text-red-600"
+                  : "text-gray-600"
+              }`}
+            >
+              👎 {video.dislikes?.length || 0}
+            </button>
+            <button className="cursor-pointer bg-red-100 px-3 rounded-full hover:text-gray-800">
+              📤 Share
+            </button>
+            <button className="cursor-pointer bg-red-100 px-3 rounded-full hover:text-gray-800">
+              ⬇ Download
+            </button>
+          </div>
+        </div>
+
+        {/* Collapsible Description */}
+        <div className="text-sm bg-gray-200 p-2 rounded-xl text-gray-800 my-4">
+          <p className={showMore ? "" : "line-clamp-2"}>{video.description}</p>
           <button
-            className={`text-sm ${
-              user?.id && video.dislikes.includes(user.id)
-                ? "text-red-500"
-                : "text-gray-500"
-            }`}
-            onClick={handleDislike}
+            onClick={() => setShowMore((prev) => !prev)}
+            className="text-blue-600 hover:underline mt-1 text-sm"
           >
-            👎 {video.dislikes?.length || 0}
+            {showMore ? "Show less" : "Show more"}
           </button>
         </div>
 
-        <p className="text-sm text-gray-500">
-          {video.uploader} • {video.views} views
-        </p>
-        <p className="mt-2 text-sm">{video.description}</p>
-
-        <div className="mt-6">
+        {/* Comments */}
+        <div>
           <h4 className="font-semibold mb-2">Comments</h4>
 
-          {/*  Show comment form only if logged in */}
+          {/* Only show form if user is logged in */}
           {user && <CommentForm onSubmit={handleAddComment} />}
 
           {comments.length === 0 ? (

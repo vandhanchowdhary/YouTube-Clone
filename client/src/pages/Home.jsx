@@ -6,22 +6,23 @@ function Home({ searchText }) {
   const [videos, setVideos] = useState([]); // State to hold the list of videos
   const [category, setCategory] = useState("All"); // State to hold the selected category
 
-  // Effect to fetch videos when the component mounts or searchText changes
-  // If searchText is empty, fetch all videos; otherwise, fetch filtered videos
+  // Fetch videos based on search text or category or both.
   useEffect(() => {
-    let endpoint = searchText.trim()
-      ? `http://localhost:5000/api/videos?search=${searchText}`
-      : `http://localhost:5000/api/videos`;
-
     const queryParams = [];
-    if (searchText) queryParams.push(`search=${searchText}`);
+
+    if (searchText.trim()) queryParams.push(`search=${searchText}`);
     if (category !== "All") queryParams.push(`category=${category}`);
-    if (queryParams.length) endpoint += "?" + queryParams.join("&");
+
+    const endpoint =
+      "http://localhost:5000/api/videos" +
+      (queryParams.length ? "?" + queryParams.join("&") : "");
 
     fetch(endpoint)
       .then((res) => res.json())
-      .then(setVideos);
+      .then(setVideos)
+      .catch((err) => console.error("Error loading videos:", err));
   }, [searchText, category]);
+
 
   return (
     <div>

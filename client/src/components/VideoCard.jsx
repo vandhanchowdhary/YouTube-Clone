@@ -6,7 +6,7 @@ function VideoCard({ video, compact = false }) {
       to={`/video/${video._id}`}
       className={`w-full flex ${
         compact ? "flex-row gap-3" : "flex-col"
-      } sm:w-48 md:w-64 lg:w-74 p-2 block rounded-lg shadow hover:scale-105`}
+      } sm:w-48 md:w-64 lg:w-74 p-2 bg-gray-100 block rounded-lg shadow hover:scale-105 transition-all duration-200`}
     >
       <img
         src={video.thumbnailUrl}

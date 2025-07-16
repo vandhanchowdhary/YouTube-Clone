@@ -12,7 +12,7 @@ import UploadVideo from "./components/UploadVideo";
 function App() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [searchText, setSearchText] = useState("");
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
     <div className="relative h-screen overflow-hidden">
@@ -42,7 +42,7 @@ function App() {
             isCollapsed ? "ml-20" : "ml-60"
           }`}
         >
-          <div className="px-4 overflow-y-auto h-[calc(100vh-4rem)]">
+          <div className="overflow-y-auto h-[calc(100vh-4rem)]">
             <Routes>
               <Route path="/" element={<Home searchText={searchText} />} />
               <Route path="/login" element={<Login />} />
