@@ -96,6 +96,61 @@ function Channel() {
     }
   };
 
+  const handleDeleteChannel = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this channel?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/channels/${channel._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      if (res.status === 409) {
+        // Channel has videos — prompt for force deletion
+        const data = await res.json();
+        const confirmForce = window.confirm(
+          `This channel has ${data.videosCount} video(s). Do you want to delete them along with the channel?`
+        );
+
+        if (!confirmForce) return;
+
+        // Retry with force=true
+        const forceRes = await fetch(
+          `http://localhost:5000/api/channels/${channel._id}?force=true`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+
+        if (forceRes.ok) {
+          alert("Channel and its videos deleted successfully.");
+          window.location.href = "/"; // redirect to home
+        } else {
+          alert("Failed to delete channel with videos.");
+        }
+      } else if (res.ok) {
+        alert("Channel deleted.");
+        window.location.href = "/";
+      } else {
+        alert("Failed to delete channel.");
+      }
+    } catch (err) {
+      alert("Error: " + err.message);
+    }
+  };
+
+
   if (loading) return <div className="p-4">Loading...</div>;
   if (!channel)
     return <div className="p-4 text-red-600">Channel not found</div>;
@@ -111,13 +166,20 @@ function Channel() {
       </p>
 
       {isOwner && (
-        <div className="mb-4">
+        <div className="mb-4 flex gap-4">
           <Link
             to="/upload"
             className="inline-block bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700"
           >
             ⬆ Upload Video
           </Link>
+
+          <button
+            onClick={handleDeleteChannel}
+            className="bg-red-600 text-white text-sm px-4 py-2 rounded hover:bg-red-700"
+          >
+            🗑 Delete Channel
+          </button>
         </div>
       )}
 
