@@ -27,7 +27,7 @@ function Home({ searchText }) {
     <div>
       <FilterBar activeCategory={category} onChange={setCategory} />
       <h2>{searchText ? `Showing results for "${searchText}"` : null}</h2>
-      <div className="flex flex-wrap justify-start gap-4 p-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-2">
         {videos.map((video) => (
           <VideoCard key={video._id} video={video} />
         ))}

@@ -29,9 +29,9 @@ function App() {
       <div className="flex pt-16 h-full">
         {/* Sidebar (absolute under header) */}
         <div
-          className={`h-[calc(100vh-4rem)] bg-white shadow-md transition-all duration-300 ${
-            isCollapsed ? "w-15" : "w-50"
-          } fixed top-16 left-0 z-10`}
+          className={`fixed top-16 left-0 z-10 transition-all duration-300 ${
+            isCollapsed ? "w-20" : "w-60"
+          }`}
         >
           <Sidebar collapsed={isCollapsed} />
         </div>
@@ -39,7 +39,7 @@ function App() {
         {/* Main Content (with left margin if sidebar visible) */}
         <main
           className={`flex-1 transition-all duration-300 ${
-            isCollapsed ? "ml-15" : "ml-50"
+            isCollapsed ? "ml-20" : "ml-60"
           }`}
         >
           <div className="px-4 overflow-y-auto h-[calc(100vh-4rem)]">

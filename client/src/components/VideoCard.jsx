@@ -6,13 +6,13 @@ function VideoCard({ video, compact = false }) {
       to={`/video/${video._id}`}
       className={`w-full flex ${
         compact ? "flex-row gap-3" : "flex-col"
-      } sm:w-64 md:w-72 lg:w-80 p-2 block`}
+      } sm:w-48 md:w-64 lg:w-74 p-2 block rounded-lg shadow hover:scale-105`}
     >
       <img
         src={video.thumbnailUrl}
         alt={video.title}
         className={`${
-          compact ? "w-40 h-24" : "w-full h-48"
+          compact ? "w-40 h-24" : "w-full h-40"
         } object-cover rounded-md`}
       />
       <div className={`${compact ? "flex-1" : ""}`}>

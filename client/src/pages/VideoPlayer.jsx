@@ -143,19 +143,24 @@ function VideoPlayer() {
         <div className="flex items-center gap-4 mt-2">
           <button
             className={`text-sm ${
-              video.likes.includes(user.id) ? "text-blue-500" : "text-gray-500"
+              user && video.likes.includes(user.id)
+                ? "text-blue-500"
+                : "text-gray-500"
             }`}
-            onClick={handleLike}
+            onClick={user ? handleLike : null}
+            disabled={!user}
           >
             👍 {video.likes.length}
           </button>
+
           <button
             className={`text-sm ${
-              video.dislikes.includes(user.id)
+              user && video.dislikes.includes(user.id)
                 ? "text-red-500"
                 : "text-gray-500"
             }`}
-            onClick={handleDislike}
+            onClick={user ? handleDislike : null}
+            disabled={!user}
           >
             👎 {video.dislikes.length}
           </button>
