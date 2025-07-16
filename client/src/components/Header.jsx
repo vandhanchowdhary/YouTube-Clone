@@ -1,5 +1,5 @@
 import { useAuth } from "../context/useAuth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function Header({ toggleSidebar, onSearchChange }) {
@@ -20,6 +20,8 @@ function Header({ toggleSidebar, onSearchChange }) {
     onSearchChange("");
   };
 
+  const location = useLocation(); // to detect route changes
+
   useEffect(() => {
     const fetchMyChannel = async () => {
       if (!user) {
@@ -34,10 +36,16 @@ function Header({ toggleSidebar, onSearchChange }) {
           },
         });
 
+        if (res.status === 404) {
+          setChannelId(null);
+          return;
+        }
+
         if (res.ok) {
           const data = await res.json();
           setChannelId(data._id);
         } else {
+          console.warn("Failed to fetch channel info.");
           setChannelId(null);
         }
       } catch (err) {
@@ -47,7 +55,8 @@ function Header({ toggleSidebar, onSearchChange }) {
     };
 
     fetchMyChannel();
-  }, [user]);
+
+  }, [user, location.pathname]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-20 bg-white text-black flex items-center justify-between h-16 px-4 border-b shadow-sm">
@@ -59,7 +68,10 @@ function Header({ toggleSidebar, onSearchChange }) {
         >
           ☰
         </button>
-        <Link to="/" className="flex items-center text-lg font-semibold text-red-600">
+        <Link
+          to="/"
+          className="flex items-center text-lg font-semibold text-red-600"
+        >
           <img src="/logo.webp" alt="YouTube Clone Logo" className="h-8" />
           YouTube <span className="text-black font-light">Clone</span>
         </Link>

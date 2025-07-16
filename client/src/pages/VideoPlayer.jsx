@@ -6,7 +6,7 @@ import CommentForm from "../components/CommentForm";
 import FilterBar from "../components/FilterBar";
 import VideoCard from "../components/VideoCard";
 
-function VideoPlayer() {
+function VideoPlayer({ width }) {
   const { id } = useParams();
   const { user } = useAuth();
 
@@ -153,9 +153,9 @@ function VideoPlayer() {
   if (!video) return <div className="p-4">Loading...</div>;
 
   return (
-    <div className="flex flex-col md:flex-row gap-3 p-4">
+    <div className="flex flex-col md:flex-row gap-6 p-4">
       {/* LEFT: Video + Comments */}
-      <div className="w-full md:w-[60%]">
+      <div className={`w-full ${width ? "md:w-[70%]" : "md:w-[60%]"}`}>
         {/* Video Player */}
         <div className="aspect-video w-full bg-black rounded-xl mb-4">
           <video
@@ -262,7 +262,7 @@ function VideoPlayer() {
       </div>
 
       {/* RIGHT: Filters + Recommendations */}
-      <div className="w-full md:w-[30%] space-y-4">
+      <div className="w-full mr-auto md:w-[20%] space-y-4">
         <FilterBar activeCategory={category} onChange={setCategory} />
         <div className="space-y-3">
           {recommended.map((v) => (

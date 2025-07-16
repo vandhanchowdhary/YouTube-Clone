@@ -10,7 +10,7 @@ export const register = async (req, res) => {
     const newUser = await User.create({ username, email, password: hashed });
 
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
-    res.json({ token, username: user.username, id: user._id });
+    res.json({ token, username: newUser.username, id: newUser._id });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

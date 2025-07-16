@@ -8,6 +8,7 @@ import Channel from "./pages/Channel";
 import { useState } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UploadVideo from "./components/UploadVideo";
+import CreateChannel from "./components/CreateChannel";
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -44,9 +45,15 @@ function App() {
         >
           <div className="overflow-y-auto h-[calc(100vh-4rem)]">
             <Routes>
-              <Route path="/" element={<Home searchText={searchText} />} />
+              <Route
+                path="/"
+                element={<Home searchText={searchText} scaleUp={isCollapsed} />}
+              />
               <Route path="/login" element={<Login />} />
-              <Route path="/video/:id" element={<VideoPlayer />} />
+              <Route
+                path="/video/:id"
+                element={<VideoPlayer width={isCollapsed} />}
+              />
               <Route path="/upload" element={<UploadVideo />} />
               <Route
                 path="/channel/:id"
@@ -56,6 +63,10 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="/channel">
+                <Route index element={<CreateChannel />} />
+                <Route path=":id" element={<Channel />} />
+              </Route>
             </Routes>
           </div>
         </main>

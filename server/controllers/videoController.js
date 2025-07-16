@@ -13,6 +13,10 @@ export const getAllVideos = async (req, res) => {
       filter.category = req.query.category;
     }
 
+    if (req.query.channel) {
+      filter.channel = req.query.channel;
+    }
+
     if (req.query.exclude) {
       filter._id = { $ne: req.query.exclude };
     }
