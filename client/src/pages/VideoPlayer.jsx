@@ -16,12 +16,11 @@ function VideoPlayer() {
   const [recommended, setRecommended] = useState([]);
   const [category, setCategory] = useState("All");
 
+  //  Fetches
   useEffect(() => {
     fetch(`http://localhost:5000/api/videos/${id}`)
       .then((res) => res.json())
-      .then((data) => {
-        setVideo(data);
-      })
+      .then(setVideo)
       .catch((err) => console.error("Error loading video:", err));
 
     let endpoint = `http://localhost:5000/api/videos?exclude=${id}&limit=15`;
@@ -34,13 +33,14 @@ function VideoPlayer() {
 
     fetch(`http://localhost:5000/api/comments/${id}`)
       .then((res) => res.json())
-      .then((data) => {
-        setComments(data);
-      })
+      .then(setComments)
       .catch((err) => console.error("Error loading comments:", err));
   }, [id, category]);
 
+  //  Safe handling even if user is null
   const handleAddComment = async (content) => {
+    if (!user?.token) return;
+
     const res = await fetch("http://localhost:5000/api/comments", {
       method: "POST",
       headers: {
@@ -55,6 +55,8 @@ function VideoPlayer() {
   };
 
   const handleEditComment = async (commentId, updatedContent) => {
+    if (!user?.token) return;
+
     const res = await fetch(`http://localhost:5000/api/comments/${commentId}`, {
       method: "PUT",
       headers: {
@@ -65,12 +67,12 @@ function VideoPlayer() {
     });
 
     const data = await res.json();
-
     setComments((prev) => prev.map((c) => (c._id === commentId ? data : c)));
-    setEditingComment(null); // Close form
+    setEditingComment(null);
   };
 
   const handleDeleteComment = async (commentId) => {
+    if (!user?.token) return;
     const confirm = window.confirm("Delete this comment?");
     if (!confirm) return;
 
@@ -85,6 +87,19 @@ function VideoPlayer() {
   };
 
   const handleLike = async () => {
+
+    //  Check if user is logged in
+
+    if (!user?.token || !video?._id) {
+      const goToLogin = window.confirm(
+        "You need to be logged in to like videos. Go to login?"
+      );
+      if (goToLogin) {
+        window.location.href = "/login";
+      }
+      return;
+    }
+
     const res = await fetch(
       `http://localhost:5000/api/videos/${video._id}/like`,
       {
@@ -103,6 +118,19 @@ function VideoPlayer() {
   };
 
   const handleDislike = async () => {
+
+    //  Check if user is logged in
+
+    if (!user?.token || !video?._id) {
+      const goToLogin = window.confirm(
+        "You need to be logged in to dislike videos. Go to login?"
+      );
+      if (goToLogin) {
+        window.location.href = "/login";
+      }
+      return;
+    }
+
     const res = await fetch(
       `http://localhost:5000/api/videos/${video._id}/dislike`,
       {
@@ -128,7 +156,7 @@ function VideoPlayer() {
       <div className="w-full md:w-[70%]">
         <div className="aspect-video w-full bg-black rounded-xl mb-4">
           <video
-            key={video.videoUrl} // force re-render when videoUrl changes
+            key={video.videoUrl}
             controls
             className="w-full h-full object-cover rounded-xl"
             src={
@@ -140,29 +168,29 @@ function VideoPlayer() {
         </div>
 
         <h3 className="text-lg font-semibold">{video.title}</h3>
+
+        {/*  Safe user access */}
         <div className="flex items-center gap-4 mt-2">
           <button
             className={`text-sm ${
-              user && video.likes.includes(user.id)
+              user?.id && video.likes.includes(user.id)
                 ? "text-blue-500"
                 : "text-gray-500"
             }`}
-            onClick={user ? handleLike : null}
-            disabled={!user}
+            onClick={handleLike}
           >
-            👍 {video.likes.length}
+            👍 {video.likes?.length || 0}
           </button>
 
           <button
             className={`text-sm ${
-              user && video.dislikes.includes(user.id)
+              user?.id && video.dislikes.includes(user.id)
                 ? "text-red-500"
                 : "text-gray-500"
             }`}
-            onClick={user ? handleDislike : null}
-            disabled={!user}
+            onClick={handleDislike}
           >
-            👎 {video.dislikes.length}
+            👎 {video.dislikes?.length || 0}
           </button>
         </div>
 
@@ -173,7 +201,10 @@ function VideoPlayer() {
 
         <div className="mt-6">
           <h4 className="font-semibold mb-2">Comments</h4>
+
+          {/*  Show comment form only if logged in */}
           {user && <CommentForm onSubmit={handleAddComment} />}
+
           {comments.length === 0 ? (
             <p className="text-sm text-gray-500">No comments yet.</p>
           ) : (
