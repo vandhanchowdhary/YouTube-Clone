@@ -50,7 +50,7 @@ cd YOUTUBE-CLONE
 #### HTTPS
 
 ```bash
-https://github.com/vandhanchowdhary/YouTube-Clone.git
+git clone https://github.com/vandhanchowdhary/YouTube-Clone.git
 cd YOUTUBE-CLONE
 ```
 
