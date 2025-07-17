@@ -64,7 +64,7 @@ function FilterBar({ activeCategory, onChange }) {
       {/* Scrollable Tags */}
       <div
         ref={scrollRef}
-        className="flex gap-2 overflow-x-auto scrollbar-hide mx-2 p-2 bg-white "
+        className="flex gap-2 overflow-x-auto scrollbar-hide mx-2 p-2 bg-white max-w-full "
       >
         {categories.map((cat) => (
           <button

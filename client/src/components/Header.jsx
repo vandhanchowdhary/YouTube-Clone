@@ -68,12 +68,12 @@ function Header({ toggleSidebar, onSearchChange }) {
         >
           ☰
         </button>
-        <Link
-          to="/"
-          className="flex items-center text-lg font-semibold text-red-600"
-        >
+        <Link to="/" className="flex items-center">
           <img src="/logo.webp" alt="YouTube Clone Logo" className="h-8" />
-          YouTube <span className="text-black font-light">Clone</span>
+          <span className="text-red-600 text-lg font-semibold hidden lg:block">
+            YouTube
+          </span>
+          <span className="text-black font-light hidden lg:block">Clone</span>
         </Link>
       </div>
 

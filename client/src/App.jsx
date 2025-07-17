@@ -16,7 +16,7 @@ function App() {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
-    <div className="relative h-screen overflow-hidden">
+    <div className="relative h-screen overflow-x-hidden">
       {/* Header (fixed height) */}
       <Header
         toggleSidebar={() => {
@@ -36,12 +36,23 @@ function App() {
         >
           <Sidebar collapsed={isCollapsed} />
         </div>
+        {!isCollapsed && window.innerWidth < 768 && (
+          <div
+            className="fixed inset-0 bg-black opacity-50 z-9"
+            onClick={() => {
+              setShowSidebar(false);
+              setIsCollapsed(true);
+            }}
+          ></div>
+        )}
 
         {/* Main Content (with left margin if sidebar visible) */}
         <main
           className={`flex-1 transition-all duration-300 ${
-            isCollapsed ? "ml-20" : "ml-60"
-          }`}
+            isCollapsed ? "md:ml-20" : "md:ml-60"
+          } ${
+            !isCollapsed ? "max-[767px]:ml-0" : "ml-20 p-4"
+          } overflow-x-hidden`}
         >
           <div className="overflow-y-auto h-[calc(100vh-4rem)]">
             <Routes>

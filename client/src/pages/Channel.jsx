@@ -158,59 +158,74 @@ function Channel() {
   const isOwner = user && channel && user.id === channel.owner;
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold">{channel.channelName}</h2>
-      <p className="text-gray-600 mb-2">{channel.description}</p>
-      <p className="text-sm text-gray-400 mb-6">
-        Subscribers: {channel.subscribers}
-      </p>
+    <div className="min-h-screen bg-white">
+      {/* Channel Banner & Info */}
+      <div className="w-full h-48 bg-gradient-to-r from-red-600 to-pink-500 relative">
+        <div className="absolute bottom-4 left-6 text-white">
+          <h1 className="text-3xl font-bold">{channel.channelName}</h1>
+          <p className="text-sm text-white/90">{channel.description}</p>
+          <p className="text-xs mt-1 text-white/80">
+            {channel.subscribers} subscribers
+          </p>
+        </div>
+      </div>
 
+      {/* Channel Actions (only owner) */}
       {isOwner && (
-        <div className="mb-4 flex gap-4">
+        <div className="flex justify-end gap-4 px-6 py-4 bg-gray-100 border-b">
           <Link
             to="/upload"
-            className="inline-block bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md"
           >
             ⬆ Upload Video
           </Link>
 
           <button
             onClick={handleDeleteChannel}
-            className="bg-red-600 text-white text-sm px-4 py-2 rounded hover:bg-red-700"
+            className="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded-md"
           >
             🗑 Delete Channel
           </button>
         </div>
       )}
 
-      <h3 className="text-xl font-semibold mb-4">Uploaded Videos</h3>
-      <div className="flex flex-wrap gap-4">
+      {/* Video Section */}
+      <div className="px-6 py-4">
+        <h3 className="text-xl font-semibold mb-4">Uploaded Videos</h3>
         {videos.length > 0 ? (
-          videos.map((video) => (
-            <div key={video._id} className="relative group">
-              <VideoCard video={video} />
-              {isOwner && (
-                <div className="absolute bottom-2 right-2 flex gap-1">
-                  <button
-                    onClick={() => setEditingVideo(video)}
-                    className="bg-yellow-400 text-xs px-2 py-1 rounded"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(video._id)}
-                    className="bg-red-500 text-xs px-2 py-1 rounded"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-            </div>
-          ))
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+            {videos.map((video) => (
+              <div
+                key={video._id}
+                className="bg-white rounded-md flex flex-col justify-between items-center"
+              >
+                <VideoCard video={video} />
+
+                {isOwner && (
+                  <div className="mt-2 flex justify-evenly gap-2">
+                    <button
+                      onClick={() => setEditingVideo(video)}
+                      className="bg-yellow-400 hover:bg-yellow-500 text-xs px-3 py-1 rounded"
+                    >
+                      ✏️ Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(video._id)}
+                      className="bg-red-500 hover:bg-red-600 text-xs px-3 py-1 rounded text-white"
+                    >
+                      🗑 Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         ) : (
           <p className="text-sm text-gray-500">No videos uploaded yet.</p>
         )}
       </div>
+
+      {/* Edit Form Overlay */}
       {editingVideo && (
         <EditVideoForm
           video={editingVideo}
@@ -220,6 +235,7 @@ function Channel() {
       )}
     </div>
   );
+
 }
 
 export default Channel;

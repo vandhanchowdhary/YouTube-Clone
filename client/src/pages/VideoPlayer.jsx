@@ -153,9 +153,9 @@ function VideoPlayer({ width }) {
   if (!video) return <div className="p-4">Loading...</div>;
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 p-4">
+    <div className="flex flex-col lg:flex-row gap-6 p-4">
       {/* LEFT: Video + Comments */}
-      <div className={`w-full ${width ? "md:w-[70%]" : "md:w-[60%]"}`}>
+      <div className={`w-full ${width ? "md:w-[70%]" : "md:w-full"}`}>
         {/* Video Player */}
         <div className="aspect-video w-full bg-black rounded-xl mb-4">
           <video
@@ -181,15 +181,15 @@ function VideoPlayer({ width }) {
             <span>{video.views} views</span>
           </div>
 
-          <button className="bg-red-600 text-white px-3 rounded-full ml-2 mr-auto cursor-pointer hover:bg-red-700 transition duration-200">
+          <button className="bg-red-600 text-white px-3 py-2 h-10 text-justify rounded-full ml-2 mr-auto cursor-pointer hover:bg-red-700 transition duration-200">
             Subscribe
           </button>
 
           {/* Actions */}
-          <div className="flex gap-3 flex-wrap mt-2 sm:mt-0">
+          <div className="flex gap-3 flex-nowrap mt-2 sm:mt-0">
             <button
               onClick={handleLike}
-              className={`hover:text-blue-600 cursor-pointer bg-red-100 px-3 rounded-full transition duration-200 ${
+              className={`hover:text-blue-600 cursor-pointer h-10 bg-red-100 px-3 rounded-full transition duration-200 ${
                 user?.id && video.likes.includes(user.id)
                   ? "text-blue-600"
                   : "text-gray-600"
@@ -199,7 +199,7 @@ function VideoPlayer({ width }) {
             </button>
             <button
               onClick={handleDislike}
-              className={`hover:text-red-600 cursor-pointer bg-red-100 px-3 rounded-full transition duration-200 ${
+              className={`hover:text-red-600 cursor-pointer h-10 bg-red-100 px-3 rounded-full transition duration-200 ${
                 user?.id && video.dislikes.includes(user.id)
                   ? "text-red-600"
                   : "text-gray-600"
@@ -207,10 +207,10 @@ function VideoPlayer({ width }) {
             >
               👎 {video.dislikes?.length || 0}
             </button>
-            <button className="cursor-pointer bg-red-100 px-3 rounded-full hover:text-gray-800">
+            <button className="cursor-pointer bg-red-100 px-3 h-10 rounded-full hover:text-gray-800">
               📤 Share
             </button>
-            <button className="cursor-pointer bg-red-100 px-3 rounded-full hover:text-gray-800">
+            <button className="cursor-pointer bg-red-100 px-3 h-10 max-md:hidden min-lg:hidden xl:block rounded-full hover:text-gray-800">
               ⬇ Download
             </button>
           </div>
@@ -262,7 +262,7 @@ function VideoPlayer({ width }) {
       </div>
 
       {/* RIGHT: Filters + Recommendations */}
-      <div className="w-full mr-auto md:w-[20%] space-y-4">
+      <div className="w-full mr-auto md:w-[40%] space-y-4">
         <FilterBar activeCategory={category} onChange={setCategory} />
         <div className="space-y-3">
           {recommended.map((v) => (

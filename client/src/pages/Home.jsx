@@ -25,10 +25,14 @@ function Home({ searchText, scaleUp }) {
 
 
   return (
-    <div>
+    <div className="max-w-screen-2xl mx-auto px-4 overflow-x-hidden">
       <FilterBar activeCategory={category} onChange={setCategory} />
       <h2>{searchText ? `Showing results for "${searchText}"` : null}</h2>
-      <div className={`grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-4 px-2 ${scaleUp ? "gap-10 px-6 py-6" : ""}`}>
+      <div
+        className={`grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-4 ${
+          scaleUp ? "gap-10" : ""
+        }`}
+      >
         {videos.map((video) => (
           <VideoCard key={video._id} video={video} scaleUp={scaleUp} />
         ))}
