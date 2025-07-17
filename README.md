@@ -22,8 +22,7 @@ youtube-clone/
 2. Express.js
 3. React + Vite + Tailwind CSS
 4. Node.js
-5. Redux (for global state management)
-6. Cloudinary (video uploads & thumbnails)
+5. Cloudinary (video uploads & thumbnails)
 
 <!-- vandhanchowdhary:mongo2003 -->
 
@@ -41,25 +40,32 @@ youtube-clone/
 
 ### Clone this repo
 
+#### GitHub CLI
+
 ```bash
-git clone https://github.com/your-username/youtube-clone.git
-cd youtube-clone
+gh repo clone vandhanchowdhary/YouTube-Clone
+cd YOUTUBE-CLONE
+```
+
+#### HTTPS
+
+```bash
+https://github.com/vandhanchowdhary/YouTube-Clone.git
+cd YOUTUBE-CLONE
 ```
 
 ### Set up both frontend and backend
 
 ```bash
-cd client
+cd ../client/
 npm install
-cd ../server
+cd ../server/
 npm install
 ```
 
 ### Configure your environment
 
-1. client/.env – set VITE_BACKEND_URL=<http://localhost:5000>
-2. server/.env – set Mongo URI, JWT secrets, Cloudinary keys, etc.
-
+server/.env – set Mongo URI, JWT secrets, Cloudinary keys, etc.
 > For this demo project I have included my own `.env` in the repo.
 
 ### Start the project
@@ -72,9 +78,9 @@ npm run dev
 
 ## Video Playback Notes
 
-- ✔️ Three sample videos are already seeded and hosted on Cloudinary.
+- ✔️ Three sample videos and two test videos are already seeded and hosted on Cloudinary.
 - ✔️ The `uploads/` folder contains two local `.mp4` videos (under 10MB).
 - 🔁 We can upload our own videos locally via the Upload form (multer-based).
-- 📦 The project is kept under 40MB to meet submission requirements.
+- 📦 The project is kept under 40MB to meet requirements.
 
 > NOT restricting uploads from `server-side` (Still in development)
