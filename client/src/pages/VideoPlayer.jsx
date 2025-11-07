@@ -17,15 +17,14 @@ function VideoPlayer({ width }) {
   const [category, setCategory] = useState("All");
   const [showMore, setShowMore] = useState(false);
 
-
   //  Fetches
   useEffect(() => {
-    fetch(`http://localhost:5000/api/videos/${id}`)
+    fetch(`https://youtube-clone-10ua.onrender.com/api/videos/${id}`)
       .then((res) => res.json())
       .then(setVideo)
       .catch((err) => console.error("Error loading video:", err));
 
-    let endpoint = `http://localhost:5000/api/videos?exclude=${id}&limit=15`;
+    let endpoint = `https://youtube-clone-10ua.onrender.com/api/videos?exclude=${id}&limit=15`;
     if (category !== "All") {
       endpoint += `&category=${category}`;
     }
@@ -33,7 +32,7 @@ function VideoPlayer({ width }) {
       .then((res) => res.json())
       .then(setRecommended);
 
-    fetch(`http://localhost:5000/api/comments/${id}`)
+    fetch(`https://youtube-clone-10ua.onrender.com/api/comments/${id}`)
       .then((res) => res.json())
       .then(setComments)
       .catch((err) => console.error("Error loading comments:", err));
@@ -43,14 +42,17 @@ function VideoPlayer({ width }) {
   const handleAddComment = async (content) => {
     if (!user?.token) return;
 
-    const res = await fetch("http://localhost:5000/api/comments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
-      },
-      body: JSON.stringify({ videoId: id, content }),
-    });
+    const res = await fetch(
+      "https://youtube-clone-10ua.onrender.com/api/comments",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ videoId: id, content }),
+      }
+    );
 
     const data = await res.json();
     setComments([data, ...comments]);
@@ -59,14 +61,17 @@ function VideoPlayer({ width }) {
   const handleEditComment = async (commentId, updatedContent) => {
     if (!user?.token) return;
 
-    const res = await fetch(`http://localhost:5000/api/comments/${commentId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
-      },
-      body: JSON.stringify({ content: updatedContent }),
-    });
+    const res = await fetch(
+      `https://youtube-clone-10ua.onrender.com/api/comments/${commentId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ content: updatedContent }),
+      }
+    );
 
     const data = await res.json();
     setComments((prev) => prev.map((c) => (c._id === commentId ? data : c)));
@@ -78,18 +83,20 @@ function VideoPlayer({ width }) {
     const confirm = window.confirm("Delete this comment?");
     if (!confirm) return;
 
-    await fetch(`http://localhost:5000/api/comments/${commentId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    });
+    await fetch(
+      `https://youtube-clone-10ua.onrender.com/api/comments/${commentId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
 
     setComments((prev) => prev.filter((c) => c._id !== commentId));
   };
 
   const handleLike = async () => {
-
     //  Check if user is logged in
 
     if (!user?.token || !video?._id) {
@@ -103,7 +110,7 @@ function VideoPlayer({ width }) {
     }
 
     const res = await fetch(
-      `http://localhost:5000/api/videos/${video._id}/like`,
+      `https://youtube-clone-10ua.onrender.com/api/videos/${video._id}/like`,
       {
         method: "POST",
         headers: {
@@ -120,7 +127,6 @@ function VideoPlayer({ width }) {
   };
 
   const handleDislike = async () => {
-
     //  Check if user is logged in
 
     if (!user?.token || !video?._id) {
@@ -134,7 +140,7 @@ function VideoPlayer({ width }) {
     }
 
     const res = await fetch(
-      `http://localhost:5000/api/videos/${video._id}/dislike`,
+      `https://youtube-clone-10ua.onrender.com/api/videos/${video._id}/dislike`,
       {
         method: "POST",
         headers: {
@@ -165,7 +171,7 @@ function VideoPlayer({ width }) {
             src={
               video.videoUrl.startsWith("http")
                 ? video.videoUrl
-                : `http://localhost:5000${video.videoUrl}`
+                : `https://youtube-clone-10ua.onrender.com${video.videoUrl}`
             }
           />
         </div>

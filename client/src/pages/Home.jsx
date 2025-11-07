@@ -14,7 +14,7 @@ function Home({ searchText, scaleUp }) {
     if (category !== "All") queryParams.push(`category=${category}`);
 
     const endpoint =
-      "http://localhost:5000/api/videos" +
+      "https://youtube-clone-10ua.onrender.com/api/videos" +
       (queryParams.length ? "?" + queryParams.join("&") : "");
 
     fetch(endpoint)
@@ -22,7 +22,6 @@ function Home({ searchText, scaleUp }) {
       .then(setVideos)
       .catch((err) => console.error("Error loading videos:", err));
   }, [searchText, category]);
-
 
   return (
     <div className="max-w-screen-2xl mx-auto px-4 overflow-x-hidden">

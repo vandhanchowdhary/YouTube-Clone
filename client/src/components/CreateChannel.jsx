@@ -8,14 +8,17 @@ function ChannelFallback() {
 
   const handleCreateChannel = async ({ channelName, description }) => {
     try {
-      const res = await fetch("http://localhost:5000/api/channels", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({ channelName, description }),
-      });
+      const res = await fetch(
+        "https://youtube-clone-10ua.onrender.com/api/channels",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({ channelName, description }),
+        }
+      );
 
       const data = await res.json();
       if (res.ok) {

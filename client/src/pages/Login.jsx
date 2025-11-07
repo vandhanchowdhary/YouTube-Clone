@@ -7,7 +7,7 @@ function Login() {
   const navigate = useNavigate();
 
   const handleAuth = async (formData, isRegistering) => {
-    const url = `http://localhost:5000/api/auth/${
+    const url = `https://youtube-clone-10ua.onrender.com/api/auth/${
       isRegistering ? "register" : "login"
     }`;
 

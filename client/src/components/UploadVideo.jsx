@@ -49,13 +49,16 @@ function UploadVideo() {
     form.append("channelId", user.channelId); // Assuming user has this, then it auto attaches to the video and hidden from the user
 
     try {
-      const res = await fetch("http://localhost:5000/api/videos/upload", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: form,
-      });
+      const res = await fetch(
+        "https://youtube-clone-10ua.onrender.com/api/videos/upload",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: form,
+        }
+      );
 
       if (res.ok) {
         setStatus("✅ Upload successful!");

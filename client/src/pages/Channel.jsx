@@ -15,7 +15,9 @@ function Channel() {
   useEffect(() => {
     const fetchChannel = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/channels/${id}`);
+        const res = await fetch(
+          `https://youtube-clone-10ua.onrender.com/api/channels/${id}`
+        );
         if (res.ok) {
           const data = await res.json();
           setChannel(data);
@@ -28,7 +30,7 @@ function Channel() {
     const fetchVideos = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/videos?channel=${id}`
+          `https://youtube-clone-10ua.onrender.com/api/videos?channel=${id}`
         );
         if (res.ok) {
           const data = await res.json();
@@ -54,12 +56,15 @@ function Channel() {
     if (!confirm) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/videos/${videoId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const res = await fetch(
+        `https://youtube-clone-10ua.onrender.com/api/videos/${videoId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
 
       if (res.ok) {
         setVideos(videos.filter((v) => v._id !== videoId));
@@ -73,14 +78,17 @@ function Channel() {
 
   const handleEditSave = async (videoId, updatedData) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/videos/${videoId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify(updatedData),
-      });
+      const res = await fetch(
+        `https://youtube-clone-10ua.onrender.com/api/videos/${videoId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify(updatedData),
+        }
+      );
 
       if (res.ok) {
         const updatedVideo = await res.json();
@@ -104,7 +112,7 @@ function Channel() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/channels/${channel._id}`,
+        `https://youtube-clone-10ua.onrender.com/api/channels/${channel._id}`,
         {
           method: "DELETE",
           headers: {
@@ -124,7 +132,7 @@ function Channel() {
 
         // Retry with force=true
         const forceRes = await fetch(
-          `http://localhost:5000/api/channels/${channel._id}?force=true`,
+          `https://youtube-clone-10ua.onrender.com/api/channels/${channel._id}?force=true`,
           {
             method: "DELETE",
             headers: {
@@ -149,7 +157,6 @@ function Channel() {
       alert("Error: " + err.message);
     }
   };
-
 
   if (loading) return <div className="p-4">Loading...</div>;
   if (!channel)
@@ -235,7 +242,6 @@ function Channel() {
       )}
     </div>
   );
-
 }
 
 export default Channel;

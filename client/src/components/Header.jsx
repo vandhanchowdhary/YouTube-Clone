@@ -30,11 +30,14 @@ function Header({ toggleSidebar, onSearchChange }) {
       }
 
       try {
-        const res = await fetch("http://localhost:5000/api/channels/me", {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
+        const res = await fetch(
+          "https://youtube-clone-10ua.onrender.com/api/channels/me",
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
 
         if (res.status === 404) {
           setChannelId(null);
@@ -55,7 +58,6 @@ function Header({ toggleSidebar, onSearchChange }) {
     };
 
     fetchMyChannel();
-
   }, [user, location.pathname]);
 
   return (
