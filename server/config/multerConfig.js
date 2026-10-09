@@ -1,25 +1,31 @@
 import multer from "multer";
 import path from "path";
+import { isAllowedVideoMimeType } from "../utils/validation.js";
 
-// Where uploaded videos will be stored
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/"); // make sure this folder exists
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const name = Date.now() + ext;
-    cb(null, name);
+    const sanitized = path.basename(file.originalname).replace(/[^a-zA-Z0-9_.-]/g, "_");
+    const ext = path.extname(sanitized).toLowerCase();
+    cb(null, `${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`);
   },
 });
 
-// Only allow video file types
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("video/")) {
+  if (isAllowedVideoMimeType(file.mimetype)) {
     cb(null, true);
-  } else {
-    cb(new Error("Only video files are allowed"), false);
+    return;
   }
+
+  cb(new Error("Only MP4, MOV, AVI, and WEBM video files are allowed"), false);
 };
 
-export const upload = multer({ storage, fileFilter });
+export const upload = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 200 * 1024 * 1024,
+  },
+});
