@@ -40,11 +40,15 @@ server/
 ```bash
 PORT=5000
 MONGO_URI=your_mongo_uri
+# Optional: override Node.js DNS servers when resolving mongodb+srv:// URIs
+MONGO_DNS_SERVERS=1.1.1.1,1.0.0.1
 JWT_SECRET=your_jwt_secret
 CLOUDINARY_NAME=...
 CLOUDINARY_API_KEY=...
 CLOUDINARY_API_SECRET=...
 ```
+
+Leave `MONGO_DNS_SERVERS` unset to use the system DNS configuration.
 
 ## Scripts
 
